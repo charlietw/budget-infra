@@ -1,0 +1,19 @@
+# Local .terraform directories
+.terraform*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# tfplan files
+*.tfplan
+
+# local env variables
+.env
+
+# local config files
+docker/
+
+# local commands 
+commands.sh
+
