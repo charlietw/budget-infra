@@ -46,7 +46,12 @@ case "${task}" in
         ;;
     destroy)
         terraform -chdir=${stack_name} destroy \
-            -var stack_identifier=${stack_identifier}
+            -var stack_identifier=${stack_identifier} \
+            -var hosted_zone_id=${HOSTED_ZONE_ID} \
+            -var gcp_client_id=${GCP_CLIENT_ID} \
+            -var gcp_client_secret=${GCP_CLIENT_SECRET} \
+            -var allowed_email=${ALLOWED_EMAIL} \
+            -var domain_name=${DOMAIN_NAME}
         ;;
     rebuild)
         terraform -chdir=${stack_name} destroy \

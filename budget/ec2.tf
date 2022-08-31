@@ -1,9 +1,3 @@
-resource "aws_default_vpc" "default" {
-  tags = {
-    Name = "Default VPC"
-  }
-}
-
 data "aws_ami" "amazon_linux" {
   owners      = ["amazon"]
   most_recent = true
@@ -18,17 +12,7 @@ resource "aws_instance" "terraform_ec2" {
   ami             = data.aws_ami.amazon_linux.id
   instance_type   = "t2.nano"
   security_groups = [aws_security_group.allow_web.name]
-  user_data       = <<-EOF
-                #! /bin/bash
-                sudo yum update
-                sudo yum install -y httpd
-                sudo systemctl start httpd
-                sudo systemctl enable httpd
-                echo "
-<h1>Deployed via Terraform</h1>
-
-" | sudo tee /var/www/html/index.html
-        EOF
+  key_name                    = aws_key_pair.aws_key.key_name
 }
 
 # for declaring security group for ec2 instance resource 
@@ -68,14 +52,13 @@ resource "aws_security_group" "allow_web" {
 
 }
 
-resource "aws_s3_bucket" "charlietw-certificates" {
-  bucket = "charlietw-certificates"
+# at the moment this is required for the aws_key_pair resource
+resource "tls_private_key" "key" {
+ algorithm = "RSA"
+ rsa_bits  = 4096
 }
-
-resource "aws_s3_bucket_public_access_block" "certificates_public_access_block" {
-  bucket                  = aws_s3_bucket.charlietw-certificates.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+ 
+resource "aws_key_pair" "aws_key" {
+ key_name   = "terraform-budget-key"
+ public_key = tls_private_key.key.public_key_openssh
 }

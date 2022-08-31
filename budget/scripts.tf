@@ -14,7 +14,7 @@ resource "aws_s3_object" "setup" {
   key                    = "setup.sh"
   bucket                 = aws_s3_bucket.scripts.id
   content                = templatefile(
-    "setup.sh.tftpl",
+    "setup.sh.tpl",
     {
       networkName = "budget-net"
       allowedEmail = var.allowed_email,
