@@ -11,15 +11,15 @@ resource "aws_s3_bucket_public_access_block" "scripts_public_access_block" {
 }
 
 resource "aws_s3_object" "setup" {
-  key                    = "setup.sh"
-  bucket                 = aws_s3_bucket.scripts.id
-  content                = templatefile(
+  key    = "setup.sh"
+  bucket = aws_s3_bucket.scripts.id
+  content = templatefile(
     "setup.sh.tpl",
     {
-      networkName = "budget-net"
+      networkName  = "budget-net"
       allowedEmail = var.allowed_email,
-      bucketName = aws_s3_bucket.charlietw-certificates.bucket,
-      domainName = var.domain_name
+      bucketName   = aws_s3_bucket.charlietw-certificates.bucket,
+      domainName   = var.domain_name
     }
   )
   server_side_encryption = "AES256"

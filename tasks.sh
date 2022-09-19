@@ -7,6 +7,8 @@ if [ "$#"  -ne 3 ]; then
     exit 1
 fi
 
+source .env
+
 task=$1
 stack_name=$2
 stack_identifier=$3

@@ -3,9 +3,11 @@ data "aws_iam_policy_document" "certificate-reader" {
   statement {
     actions = [
       "s3:GetObject",
-      "s3:PutObject"
-      ]
+      "s3:PutObject",
+      "s3:ListBucket"
+    ]
     resources = [
+      "${aws_s3_bucket.charlietw-certificates.arn}",
       "${aws_s3_bucket.charlietw-certificates.arn}/*"
     ]
   }

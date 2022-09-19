@@ -11,14 +11,19 @@
 # local env variables
 .env
 
+# local tfvars
+*.tfvars
+
 # local config files
 docker/
 
 # local commands 
 commands.sh
 
-# ansible dynamic inventory
-budget/inventory.yaml
+# ansible dynamic files (created by terraform)
+ansible/inventory.yaml
+ansible/config.cfg
+ansible/playbook.yaml
 
 # ssh keys
 budget/.ssh
