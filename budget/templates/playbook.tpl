@@ -106,7 +106,7 @@
   - name: Get private key from S3
     become: yes
     amazon.aws.aws_s3:
-      bucket: charlietw-certificates
+      bucket: ${bucket}
       object: //certs/${domain}/privkey.pem # needs double // for some reason
       dest: /etc/letsencrypt/live/${domain}/privkey.pem
       mode: get
@@ -114,7 +114,7 @@
   - name: Get fullchain from S3
     become: yes
     amazon.aws.aws_s3:
-      bucket: charlietw-certificates
+      bucket: ${bucket}
       object: //certs/${domain}/fullchain.pem
       dest: /etc/letsencrypt/live/${domain}/fullchain.pem
       mode: get

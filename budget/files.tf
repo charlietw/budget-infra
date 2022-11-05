@@ -6,7 +6,7 @@ resource "local_sensitive_file" "private_key" {
 }
 
 resource "local_file" "ansible_inventory" {
-  content = templatefile("inventory.tpl", {
+  content = templatefile("templates/inventory.tpl", {
     ip          = aws_instance.terraform_ec2.public_ip
     ssh_keyfile = local_sensitive_file.private_key.filename
   })
@@ -14,9 +14,10 @@ resource "local_file" "ansible_inventory" {
 }
 
 resource "local_file" "ansible_playbook" {
-  content = templatefile("playbook.tpl", {
+  content = templatefile("templates/playbook.tpl", {
     email  = var.allowed_email
     domain = var.domain_name
+    bucket = module.charlietw-certificates.bucket_name
   })
   filename = "../ansible/playbook.yaml"
 }
@@ -27,7 +28,7 @@ resource "random_password" "cookie_secret" {
 }
 
 resource "local_file" "oauth_proxy_config" {
-  content = templatefile("config.tpl", {
+  content = templatefile("templates/config.tpl", {
     clientId     = var.gcp_client_id
     clientSecret = var.gcp_client_secret
     cookieSecret = random_password.cookie_secret.result

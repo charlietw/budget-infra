@@ -2,7 +2,9 @@
 
 ## Description
 
-This repository contains two directories - `budget` and `ansible`. `budget` is a Terraform stack describing the infrastructure underpinning the budget application, and `ansible` contains the inventories and playbooks which act on the main EC2 instance created by Terraform. The playbook and inventory are generated dynamically.
+This repository contains two directories - `budget` and `ansible`. `budget` is a Terraform stack describing the infrastructure underpinning the budget application, and `ansible` contains the inventories and playbooks which act on the main EC2 instance created by Terraform. 
+
+The ansible playbooks and inventory are generated dynamically in the `files.tf` file, which uses templates found in the `budget/templates` directory.
 
 ## Usage
 
