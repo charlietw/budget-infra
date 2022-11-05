@@ -15,4 +15,4 @@ Running `apply` will also generate the inventory and playbook.
 
 You can then run the Ansible playbook from the root of the project with:
 
-`ansible-playbook -i ansible/inventory.yaml ansible/playbook.yam`
+`ansible-playbook -i ansible/inventory.yaml ansible/playbook.yaml`

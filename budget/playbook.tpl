@@ -69,8 +69,6 @@
     community.docker.docker_container:
       name: demo-webserver
       image: nginxdemos/hello
-      published_ports:
-        - 80:80
       networks:
         - name: budget-net
         

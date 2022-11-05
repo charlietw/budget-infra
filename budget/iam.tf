@@ -7,12 +7,11 @@ data "aws_iam_policy_document" "certificate-reader" {
       "s3:ListBucket"
     ]
     resources = [
-      "${aws_s3_bucket.charlietw-certificates.arn}",
-      "${aws_s3_bucket.charlietw-certificates.arn}/*"
+      "${module.charlietw-certificates.arn}",
+      "${module.charlietw-certificates.arn}/*"
     ]
   }
 }
-
 
 # A collection of permissions, not assigned to any role yet
 resource "aws_iam_policy" "certificate-reader" {
