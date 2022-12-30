@@ -32,19 +32,29 @@
       name: quay.io/oauth2-proxy/oauth2-proxy
       source: pull
 
+# See state https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-state
+  - name: Stop oauthproxy so that port 80 is free (if it is present)
+    become: yes
+    community.docker.docker_container:
+      state: absent
+      name: oauth-proxy
+      networks:
+        - name: budget-net
+
   - name: Get certificates from certbot
     become: yes
     community.docker.docker_container:
       name: certbot
       image: certbot/certbot
       detach: no # this is required so that we can read the output
+      # Add --force-renew in order to renew this cert
       command: certonly --non-interactive --agree-tos -m ${email} --domain ${domain} --dry-run --standalone
       published_ports:
         - 80:80
       volumes:
         - "/etc/letsencrypt:/etc/letsencrypt"
         - "/var/lib/letsencrypt:/var/lib/letsencrypt"
-      auto_remove: yes
+      cleanup: yes
     register: certificate_output
 
   - name: Check certificate could be retrieved 
@@ -103,21 +113,21 @@
       state: directory
       path: /etc/letsencrypt/live/${domain}/
 
-  - name: Get private key from S3
-    become: yes
-    amazon.aws.aws_s3:
-      bucket: ${bucket}
-      object: //certs/${domain}/privkey.pem # needs double // for some reason
-      dest: /etc/letsencrypt/live/${domain}/privkey.pem
-      mode: get
+  # - name: Get private key from S3
+  #   become: yes
+  #   amazon.aws.aws_s3:
+  #     bucket: ${bucket}
+  #     object: //certs/${domain}/privkey.pem # needs double // for some reason
+  #     dest: /etc/letsencrypt/live/${domain}/privkey.pem
+  #     mode: get
 
-  - name: Get fullchain from S3
-    become: yes
-    amazon.aws.aws_s3:
-      bucket: ${bucket}
-      object: //certs/${domain}/fullchain.pem
-      dest: /etc/letsencrypt/live/${domain}/fullchain.pem
-      mode: get
+  # - name: Get fullchain from S3
+  #   become: yes
+  #   amazon.aws.aws_s3:
+  #     bucket: ${bucket}
+  #     object: //certs/${domain}/fullchain.pem
+  #     dest: /etc/letsencrypt/live/${domain}/fullchain.pem
+  #     mode: get
 
   - name: Run oauth proxy
     become: yes
