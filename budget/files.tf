@@ -18,6 +18,7 @@ resource "local_file" "ansible_playbook" {
     email  = var.allowed_email
     domain = var.domain_name
     bucket = module.charlietw-certificates.bucket_name
+    ecr_url = aws_ecr_repository.budget.repository_url
   })
   filename = "../ansible/playbook.yaml"
 }

@@ -48,7 +48,7 @@
       image: certbot/certbot
       detach: no # this is required so that we can read the output
       # Add --force-renew in order to renew this cert
-      command: certonly --non-interactive --agree-tos -m ${email} --domain ${domain} --dry-run --standalone
+      command: certonly --non-interactive --agree-tos -m ${email} --domain ${domain} --standalone
       published_ports:
         - 80:80
       volumes:
@@ -73,18 +73,38 @@
     become: yes
     community.docker.docker_network:
       name: budget-net
-  
-  - name: Run nginx sample app
+
+  - name: Get ECR token
+    become: yes
+    ansible.builtin.command: "aws ecr get-login-password --region eu-west-2"
+    register: ecr_token
+
+  - name: Log into ECR registry
+    become: yes
+    community.docker.docker_login:
+      registry_url: "${ecr_url}"
+      debug: yes
+      username: "AWS"
+      password: "{{ ecr_token.stdout }}"
+      reauthorize: yes
+
+  - name: Run budget app
     become: yes
     community.docker.docker_container:
-      name: demo-webserver
-      image: nginxdemos/hello
+      name: demo-webserver-2
+      state: started
+      pull: yes
+      detach: yes
+      image: ${ecr_url}:latest
       networks:
         - name: budget-net
         
       purge_networks: yes # so that default network is removed
-      auto_remove: yes
     register: web_app
+  
+  - name: debug budget
+    ansible.builtin.debug:
+      msg: Output is {{ web_app }}
 
   - name: Create directory for oauth2-proxy config files
     file:

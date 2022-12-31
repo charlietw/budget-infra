@@ -15,6 +15,6 @@ e.g. `./tasks plan budget budget`, if the stack name is `budget`.
 
 Running `apply` will also generate the inventory and playbook.
 
-You can then run the Ansible playbook from the root of the project with:
+You can then run the Ansible playbook from the root of the project with `make ansible` or:
 
 `ansible-playbook -i ansible/inventory.yaml ansible/playbook.yaml`

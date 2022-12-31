@@ -1,6 +1,6 @@
 redirect_url = "https://${domain}/oauth2/callback" 
 upstreams = [
-    "http://{{ docker_ip }}" # this is the IP from the docker network
+    "http://{{ docker_ip }}:5000" # this is the IP from the docker network
 ]
 authenticated_emails_file = "/etc/authenticated_emails.txt"
 client_id = "${clientId}"
